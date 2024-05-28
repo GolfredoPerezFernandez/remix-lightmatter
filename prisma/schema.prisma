@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./store.db"
+}
+
+model User {
+  id               Int              @id @default(autoincrement())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  email            String           @unique
+  password         Password?        // Relación opcional con Password
+  firstName        String
+  lastName         String
+  bio              String?
+  birthday         DateTime?        // Cambiado a DateTime para manejar fechas correctamente
+  gender           String?
+  avatar           String?
+  profession       String?
+  community        String?
+  city             String?
+  province         String?
+  address          String?
+  analysisResults  AnalysisResult[] // Relación con los resultados del análisis
+}
+
+model Password {
+  id       String @id @default(uuid())
+  salt     String
+  hash     String
+  userId   Int    @unique // Relaciona la contraseña con el usuario
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+model AnalysisResult {
+  id                 Int       @id @default(autoincrement())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  userId             Int
+  user               User      @relation(fields: [userId], references: [id])
+  chisq              Float
+  lamdaLow           Float
+  lamdaHigh          Float
+  lamdaInit          Float
+  deltachi           Float
+  tolerance          Float
+  params             String
+  alpha              String
+  difference         String
+  dfRealPartX        String
+  dfRealPartY        String
+  dfImaginaryPartX   String
+  dfImaginaryPartY   String
+  imaginaryPartX     String
+  imaginaryPartY     String
+}
